@@ -15,6 +15,7 @@ int main(int argc, char *argv[])
   if (argc >= 3)
     port = atoi(argv[2]);
 
+  //create socket
   int sock = socket(AF_INET, SOCK_STREAM, 0);
   if (sock < 0)
   {
@@ -29,7 +30,7 @@ int main(int argc, char *argv[])
 
   if (connect(sock, (struct sockaddr *)&server_addr, sizeof(server_addr)) < 0)
   {
-    perror("connect");
+    perror("Connection Failed");
     return 1;
   }
 
