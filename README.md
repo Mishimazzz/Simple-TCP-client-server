@@ -1,26 +1,31 @@
-Simple TCP Client-Server (C, Linux)
+**Simple TCP Client-Server (C, Linux)**
 
 This project implements a simple TCP client-server application in C on Linux.
 
-Files
+**Files**
 
 server.c — multi-client TCP echo server
 
 client.c — TCP client that sends periodic messages
 
-How to Compile
+**How to Compile**
+```bash
 
 gcc server.c -o server
 
 gcc client.c -o client
+```
 
-How to Run
+**How to Run**
+```bash
 
 ./server 8080
 
 ./client 127.0.0.1 8080
 
-Demo Steps
+```
+
+**Demo Steps**
 
 1.Compile both programs
 
@@ -35,7 +40,7 @@ Demo Steps
 6.The client prints the server’s response
 
 
-Example client output:
+**Example client output:**
 
 send: message 1
 
