@@ -51,5 +51,23 @@ int main(int argc, char *argv[])
     struct sockaddr_in client_addr;//save client infor
     socklen_t len = sizeof(clent_addr);
     int client_fd = accept(server_fd,(struct sockaddr*) & client_addr,&len);
+
+    if (fork() == 0)
+    {
+        close(server_fd);
+
+        char buffer[1024];
+        int n;
+
+        while ((n = recv(client_fd, buffer, sizeof(buffer), 0)) > 0)
+        {
+            send(client_fd, buffer, n, 0);   // echo
+        }
+
+        close(client_fd);
+        exit(0);
+    }
+    close(client_fd);
   }
+  return 0;
 }
