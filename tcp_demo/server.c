@@ -4,7 +4,7 @@
 #include <unistd.h>// for Linux system
 #include <arpa/inet.h>// for ip address
 #include <sys/socket.h> // socket API
-#inclue <sys/types.h>
+#include <sys/types.h>
 
 int main(int argc, char *argv[])
 {
@@ -46,28 +46,39 @@ int main(int argc, char *argv[])
   socklen_t len = sizeof(client_addr);
 
   // keep accepting new clients
-  while(1)
+  while (1)
   {
-    struct sockaddr_in client_addr;//save client infor
-    socklen_t len = sizeof(clent_addr);
-    int client_fd = accept(server_fd,(struct sockaddr*) & client_addr,&len);
+      struct sockaddr_in client_addr;
+      memset(&client_addr, 0, sizeof(client_addr));
 
-    if (fork() == 0)
-    {
-        close(server_fd);
+      socklen_t len = sizeof(client_addr);
 
-        char buffer[1024];
-        int n;
+      int client_fd = accept(server_fd, (struct sockaddr*)&client_addr, &len);
 
-        while ((n = recv(client_fd, buffer, sizeof(buffer), 0)) > 0)
-        {
-            send(client_fd, buffer, n, 0);   // echo
-        }
+      if (client_fd < 0) {
+          perror("accept");
+          continue;
+      }
 
-        close(client_fd);
-        exit(0);
-    }
-    close(client_fd);
+      printf("Client connected\n");
+
+      if (fork() == 0)
+      {
+          close(server_fd);
+
+          char buffer[1024];
+          int n;
+
+          while ((n = recv(client_fd, buffer, sizeof(buffer), 0)) > 0)
+          {
+              send(client_fd, buffer, n, 0);
+          }
+
+          close(client_fd);
+          exit(0);
+      }
+
+      close(client_fd);
   }
   return 0;
 }
