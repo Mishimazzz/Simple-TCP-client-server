@@ -4,6 +4,7 @@
 #include <unistd.h>// for Linux system
 #include <arpa/inet.h>// for ip address
 #include <sys/socket.h> // socket API
+#inclue <sys/types.h>
 
 int main(int argc, char *argv[])
 {
@@ -21,6 +22,7 @@ int main(int argc, char *argv[])
 
   // Forcefully attaching socket to the port 8080
   struct sockaddr_in addr;
+  memset(&addr, 0, sizeof(addr));
   addr.sin_family = AF_INET;
   addr.sin_addr.s_addr = INADDR_ANY;
   addr.sin_port = htons(port);
@@ -43,27 +45,11 @@ int main(int argc, char *argv[])
   struct sockaddr_in client_addr;
   socklen_t len = sizeof(client_addr);
 
-  int client_fd = accept(server_fd, (struct sockaddr *)&client_addr, &len);
-  if (client_fd < 0)
+  // keep accepting new clients
+  while(1)
   {
-    perror("client accept failed");
-    return 1;
+    struct sockaddr_in client_addr;//save client infor
+    socklen_t len = sizeof(clent_addr);
+    int client_fd = accept(server_fd,(struct sockaddr*) & client_addr,&len);
   }
-
-  printf("Client connected\n");
-
-  char buffer[1024];
-
-  while (1)
-  {
-    int n = recv(client_fd, buffer, sizeof(buffer), 0);
-    if (n <= 0)
-      break;
-
-    send(client_fd, buffer, n, 0); // echo back
-  }
-
-  close(client_fd);
-  close(server_fd);
-  return 0;
 }
